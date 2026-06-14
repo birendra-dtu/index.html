@@ -20,7 +20,7 @@ function renderWelcome(){
   document.getElementById('welcome-box').innerHTML=`
     <div class="welcome">
       <div style="font-size:48px;margin-bottom:16px">💰</div>
-      <h2>मेरा हिसाब — Loan Manager</h2>
+      <h2>SUSHIL RAY — Loan Manager</h2>
       <p>${hasData?`Welcome back! ${borrowers.length} borrowers loaded. Your data is saved to your cloud account and synced across devices.`:'No borrowers yet. Add your first borrower to get started — everything saves to your cloud account automatically.'}</p>
       <div class="steps">
         <div class="step"><div class="step-num" style="background:var(--accent)">1</div><div><strong>Add borrowers &amp; loans</strong><br><span style="font-size:12px;color:var(--text3)">Everything is tied to your account</span></div></div>
