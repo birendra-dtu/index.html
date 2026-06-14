@@ -63,7 +63,7 @@ function login(){
   clearAuthMsg();
   const email=document.getElementById('auth-email').value.trim();
   const pass =document.getElementById('auth-pass').value;
-  if(!email||!pass){showAuthError('Enter email and password.');return;}
+  if(!email||!pass){showAuthError(t('authmsg.enterBoth'));return;}
   setAuthLoading(true,'Logging in…');
   suppressVerifyGuard=true;
   auth.signInWithEmailAndPassword(email,pass)
@@ -83,8 +83,8 @@ function signUp(){
   clearAuthMsg();
   const email=document.getElementById('auth-email').value.trim();
   const pass =document.getElementById('auth-pass').value;
-  if(!email||!pass){showAuthError('Enter email and password.');return;}
-  if(pass.length<6){showAuthError('Password must be at least 6 characters.');return;}
+  if(!email||!pass){showAuthError(t('authmsg.enterBoth'));return;}
+  if(pass.length<6){showAuthError(t('authmsg.passShort'));return;}
   setAuthLoading(true,'Creating account…');
   suppressVerifyGuard=true;
   auth.createUserWithEmailAndPassword(email,pass)
@@ -115,7 +115,7 @@ function googleLogin(){
 function forgotPassword(){
   clearAuthMsg();
   const email=document.getElementById('auth-email').value.trim();
-  if(!email){showAuthError('Enter your email above first, then tap "Forgot password?".');return;}
+  if(!email){showAuthError(t('authmsg.enterEmailFirst'));return;}
   auth.sendPasswordResetEmail(email)
     .then(()=>showAuthNote('Password reset link sent to '+email+'. Check your inbox.'))
     .catch(err=>showAuthError(authErrorMessage(err.code)));
@@ -130,20 +130,20 @@ function logout(){
 /* ── FRIENDLY ERROR MESSAGES ───────────────────────────────────────── */
 function authErrorMessage(code){
   const map={
-    'auth/invalid-email':'That email address looks invalid.',
-    'auth/user-disabled':'This account has been disabled.',
-    'auth/user-not-found':'No account found with that email.',
-    'auth/wrong-password':'Incorrect password.',
-    'auth/invalid-credential':'Incorrect email or password.',
-    'auth/email-already-in-use':'An account already exists with this email. Try logging in.',
-    'auth/weak-password':'Password is too weak (min 6 characters).',
-    'auth/too-many-requests':'Too many attempts. Please wait and try again.',
-    'auth/network-request-failed':'Network error. Check your connection.',
-    'auth/popup-blocked':'Popup blocked — allow popups for Google sign-in.',
-    'auth/operation-not-allowed':'This sign-in method is not enabled in Firebase console.',
-    'auth/unauthorized-domain':'This domain is not authorised in Firebase Auth settings.'
+    'auth/invalid-email':'err.invalid-email',
+    'auth/user-disabled':'err.user-disabled',
+    'auth/user-not-found':'err.user-not-found',
+    'auth/wrong-password':'err.wrong-password',
+    'auth/invalid-credential':'err.invalid-credential',
+    'auth/email-already-in-use':'err.email-already-in-use',
+    'auth/weak-password':'err.weak-password',
+    'auth/too-many-requests':'err.too-many-requests',
+    'auth/network-request-failed':'err.network',
+    'auth/popup-blocked':'err.popup-blocked',
+    'auth/operation-not-allowed':'err.operation-not-allowed',
+    'auth/unauthorized-domain':'err.unauthorized-domain'
   };
-  return map[code] || ('Something went wrong'+(code?(' ('+code+')'):'')+'.');
+  return map[code] ? t(map[code]) : (t('err.generic')+(code?(' ('+code+')'):''));
 }
 
 /* ── PROFILE MENU ──────────────────────────────────────────────────── */
