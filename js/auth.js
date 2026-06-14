@@ -3,6 +3,7 @@
    ===================================================================== */
 
 let authMode = 'login';     // 'login' | 'signup'
+let suppressVerifyGuard = false;  // true while signUp/login handle the email-verify check themselves
 
 /* ── WIRE UP THE FORM ──────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
@@ -64,9 +65,19 @@ function login(){
   const pass =document.getElementById('auth-pass').value;
   if(!email||!pass){showAuthError('Enter email and password.');return;}
   setAuthLoading(true,'Logging in…');
+  suppressVerifyGuard=true;
   auth.signInWithEmailAndPassword(email,pass)
+    .then(cred=>{
+      if(!cred.user.emailVerified){
+        // Email abhi verify nahi → naya link bhejo, sign out, andar mat aane do.
+        return cred.user.sendEmailVerification().catch(()=>{})
+          .then(()=>auth.signOut())
+          .then(()=>showAuthError('Aapka email abhi verify nahi hua. '+email+' par bheje link par click karke verify karein, fir login karein. (Naya link dobara bhej diya — spam folder bhi dekh lein.)'));
+      }
+      // verified → onAuthStateChanged app khol dega
+    })
     .catch(err=>{showAuthError(authErrorMessage(err.code));})
-    .finally(()=>setAuthLoading(false));
+    .finally(()=>{suppressVerifyGuard=false;setAuthLoading(false);});
 }
 function signUp(){
   clearAuthMsg();
@@ -75,9 +86,16 @@ function signUp(){
   if(!email||!pass){showAuthError('Enter email and password.');return;}
   if(pass.length<6){showAuthError('Password must be at least 6 characters.');return;}
   setAuthLoading(true,'Creating account…');
+  suppressVerifyGuard=true;
   auth.createUserWithEmailAndPassword(email,pass)
+    .then(cred=>cred.user.sendEmailVerification())
+    .then(()=>auth.signOut())
+    .then(()=>{
+      setAuthMode('login');
+      showAuthNote('✓ Account ban gaya! Verification link '+email+' par bheja gaya hai. Email kholkar us link par click karein, fir yahan login karein. (Spam folder bhi check karein.)');
+    })
     .catch(err=>{showAuthError(authErrorMessage(err.code));})
-    .finally(()=>setAuthLoading(false));
+    .finally(()=>{suppressVerifyGuard=false;setAuthLoading(false);});
 }
 
 /* ── GOOGLE ────────────────────────────────────────────────────────── */
@@ -160,6 +178,15 @@ function showAuthScreen(){
    ===================================================================== */
 auth.onAuthStateChanged(async user=>{
   if(user){
+    // Email/Password accounts must verify their email first.
+    // (Google sign-in users are already verified, so they pass straight through.)
+    if(!user.emailVerified){
+      if(suppressVerifyGuard) return;          // signUp/login flow is handling it
+      try{ await auth.signOut(); }catch(e){}    // safety net for an auto-logged-in unverified session
+      showAuthScreen();
+      showAuthError('Email verify karna baaki hai. Apne email me bheje link par click karein, fir login karein.');
+      return;
+    }
     showApp(user);
     await initApp(user);        // load cloud data, migrate, sync, render
     buildProfileMenu(user);     // refresh (displayName may arrive late)
