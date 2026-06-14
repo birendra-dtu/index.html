@@ -11,6 +11,8 @@
 let cloudSyncEnabled = false;   // gate: no writes until first load settles
 let cloudSyncTimer   = null;    // debounce handle for cloudSaveAll
 let cloudListeners   = [];      // onSnapshot unsubscribe functions
+let lastBadgeState   = 'synced';// remembered so language toggle can re-render the badge
+let lastBadgeTs      = null;
 const cloudIds = { borrowers:new Set(), loans:new Set(), payments:new Set() };
 
 /* ── REFERENCES ────────────────────────────────────────────────────── */
@@ -83,6 +85,20 @@ async function migrateToCloud(uid, data){
   }, { merge:true });
 }
 
+/* ── DOCUMENTS / PHOTOS (separate subcollection, written directly) ──── */
+async function cloudLoadDocs(uid){
+  const s = await ucol(uid,'docs').get();
+  docs = s.docs.map(d=>d.data());
+}
+async function saveDocImage(d){
+  if(!currentUser) return;
+  await ucol(currentUser.uid,'docs').doc(d.id).set(d);
+}
+async function deleteDocImage(id){
+  if(!currentUser) return;
+  await ucol(currentUser.uid,'docs').doc(id).delete();
+}
+
 /* ── DEBOUNCED FULL SYNC (reconcile current arrays ↔ cloud) ────────── */
 function scheduleCloudSync(){
   if(!cloudSyncEnabled || !currentUser) return;
@@ -128,6 +144,12 @@ function attachCloudListeners(uid){
     }, err=>console.warn('[cloud] listener('+name+'):', err));
     cloudListeners.push(unsub);
   });
+  // documents/photos — separate stream, always reflect (incl. our own writes)
+  const dunsub = ucol(uid,'docs').onSnapshot(snap=>{
+    docs = snap.docs.map(d=>d.data());
+    rerenderCurrent();
+  }, err=>console.warn('[cloud] docs listener:', err));
+  cloudListeners.push(dunsub);
 }
 function detachCloudListeners(){
   cloudListeners.forEach(u=>{try{u();}catch(e){}});
@@ -144,16 +166,18 @@ function applyRemote(name, arr){
 
 /* ── SYNC BADGE + PROFILE-MENU TIMESTAMP ───────────────────────────── */
 function updateSyncBadge(state, ts){
+  lastBadgeState=state; if(ts)lastBadgeTs=ts;
   const badge=document.getElementById('sync-badge');
   const label=document.getElementById('sync-label');
   if(!badge||!label)return;
   badge.className='sync-badge '+state;
-  const text={synced:'Synced',syncing:'Syncing…',pending:'Saving…',offline:'Offline'}[state]||state;
+  const text={synced:t('sync.synced'),syncing:t('sync.syncing'),pending:t('sync.saving'),offline:t('sync.offline')}[state]||state;
   label.textContent=text;
   if(ts){
-    const t=ts.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-    badge.title='Last cloud sync: '+ts.toLocaleString('en-IN');
+    const tm=ts.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    badge.title=t('app.lastSync')+': '+ts.toLocaleString('en-IN');
     const pm=document.getElementById('pm-sync');
-    if(pm)pm.textContent='Last sync: '+t;
+    if(pm)pm.textContent=t('app.lastSync')+': '+tm;
   }
 }
+function refreshSyncBadge(){ updateSyncBadge(lastBadgeState, lastBadgeTs); }
