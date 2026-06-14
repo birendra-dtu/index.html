@@ -56,10 +56,10 @@ function saveAll(){
 /* ── ADD / EDIT BORROWER ───────────────────────────────────────────── */
 function addBorrower(){
   const name=document.getElementById('nb-name').value.trim();
-  if(!name){toast('Name required.','err');return;}
+  if(!name){toast(t('msg.nameReq'),'err');return;}
   const b={id:uid(),name,phone:document.getElementById('nb-phone').value.trim(),addr:document.getElementById('nb-addr').value.trim(),notes:document.getElementById('nb-notes').value.trim(),idno:document.getElementById('nb-id').value.trim(),createdAt:new Date().toISOString()};
   borrowers.unshift(b);saveAll();clearNB();
-  toast('Borrower added: '+name);showAddLoan(b.id);
+  toast(t('msg.borrowerAdded')+': '+name);showAddLoan(b.id);
 }
 function clearNB(){['nb-name','nb-phone','nb-addr','nb-notes','nb-id'].forEach(i=>document.getElementById(i).value='');}
 function saveEditBorrower(id){
@@ -68,24 +68,28 @@ function saveEditBorrower(id){
   b.phone=document.getElementById('eb-phone').value.trim();
   b.addr=document.getElementById('eb-addr').value.trim();
   b.notes=document.getElementById('eb-notes').value.trim();
-  saveAll();closeOverlay();renderBorrowers();viewBorrower(id);toast('Updated!');
+  saveAll();closeOverlay();renderBorrowers();viewBorrower(id);toast(t('msg.updated'));
 }
 function delBorrower(id){
   const b=borrowers.find(x=>x.id===id);if(!b)return;
   const lids=bLoans(id).map(l=>l.id);
-  if(!confirm(`Delete "${b.name}" and all ${lids.length} loans + payments?`))return;
+  if(!confirm(b.name+' — '+t('msg.delBorrowerConfirm')))return;
+  const pids=payments.filter(p=>lids.includes(p.lid)).map(p=>p.id);
+  const ownsDoc=d=>(d.refType==='borrower'&&d.refId===id)||(d.refType==='loan'&&lids.includes(d.refId))||(d.refType==='payment'&&pids.includes(d.refId));
+  docs.filter(ownsDoc).forEach(d=>deleteDocImage(d.id).catch(()=>{}));
+  docs=docs.filter(d=>!ownsDoc(d));
   borrowers=borrowers.filter(x=>x.id!==id);loans=loans.filter(l=>l.bid!==id);payments=payments.filter(p=>!lids.includes(p.lid));
-  saveAll();document.getElementById('borrower-detail').innerHTML='';renderBorrowers();toast('Deleted.','err');
+  saveAll();document.getElementById('borrower-detail').innerHTML='';renderBorrowers();toast(t('msg.deleted'),'err');
 }
 
 /* ── ADD / EDIT LOAN ───────────────────────────────────────────────── */
 function saveLoan(bid){
   const prin=parseFloat(document.getElementById('nl-prin').value);
   const start=document.getElementById('nl-start').value;
-  if(!prin||prin<1){toast('Valid principal required.','err');return;}
-  if(!start){toast('Start date required.','err');return;}
+  if(!prin||prin<1){toast(t('msg.principalReq'),'err');return;}
+  if(!start){toast(t('msg.startReq'),'err');return;}
   const l={id:uid(),bid,prin,rate:parseFloat(document.getElementById('nl-rate').value)||2,start,dur:parseInt(document.getElementById('nl-dur').value)||12,type:document.getElementById('nl-type').value,coll:document.getElementById('nl-coll').value.trim(),notes:document.getElementById('nl-notes').value.trim(),closed:false,createdAt:new Date().toISOString()};
-  loans.unshift(l);saveAll();closeOverlay();toast('Loan added!');goTab('borrowers');setTimeout(()=>viewBorrower(bid),80);
+  loans.unshift(l);saveAll();flushPendingDocs('loan',l.id);closeOverlay();toast(t('msg.loanAdded'));goTab('borrowers');setTimeout(()=>viewBorrower(bid),80);
 }
 function saveEditLoan(lid){
   const l=loans.find(x=>x.id===lid);if(!l)return;
@@ -96,24 +100,117 @@ function saveEditLoan(lid){
   l.type=document.getElementById('nl-type').value;
   l.coll=document.getElementById('nl-coll').value.trim();
   l.notes=document.getElementById('nl-notes').value.trim();
-  saveAll();closeOverlay();renderBorrowers();viewBorrower(l.bid);toast('Loan updated!');
+  saveAll();closeOverlay();renderBorrowers();viewBorrower(l.bid);toast(t('msg.loanUpdated'));
 }
 function delLoan(lid){
   const l=loans.find(x=>x.id===lid);if(!l)return;
-  if(!confirm('Delete this loan and all its payments?'))return;
-  const bid=l.bid;loans=loans.filter(x=>x.id!==lid);payments=payments.filter(p=>p.lid!==lid);
-  saveAll();viewBorrower(bid);toast('Loan deleted.','err');
+  if(!confirm(t('msg.delLoanConfirm')))return;
+  const bid=l.bid;
+  const pids=payments.filter(p=>p.lid===lid).map(p=>p.id);
+  const ownsDoc=d=>(d.refType==='loan'&&d.refId===lid)||(d.refType==='payment'&&pids.includes(d.refId));
+  docs.filter(ownsDoc).forEach(d=>deleteDocImage(d.id).catch(()=>{}));
+  docs=docs.filter(d=>!ownsDoc(d));
+  loans=loans.filter(x=>x.id!==lid);payments=payments.filter(p=>p.lid!==lid);
+  saveAll();viewBorrower(bid);toast(t('msg.loanDeleted'),'err');
 }
 
 /* ── PAYMENTS ──────────────────────────────────────────────────────── */
 function recPay(){
   const bid=document.getElementById('p-who').value;const lid=document.getElementById('p-loan').value;
   const amt=parseFloat(document.getElementById('p-amt').value);const date=document.getElementById('p-date').value;
-  if(!bid){toast('Select borrower.','err');return;}if(!lid){toast('Select loan.','err');return;}
-  if(!amt||amt<1){toast('Enter valid amount.','err');return;}
-  payments.unshift({id:uid(),lid,amt,date,type:document.getElementById('p-type').value,note:document.getElementById('p-note').value.trim()});
-  saveAll();document.getElementById('p-amt').value='';document.getElementById('p-note').value='';renderPay();
-  toast('Payment recorded: '+fmt(amt));
+  if(!bid){toast(t('msg.selBorrower'),'err');return;}if(!lid){toast(t('msg.selLoan'),'err');return;}
+  if(!amt||amt<1){toast(t('msg.validAmt'),'err');return;}
+  const pid=uid();
+  payments.unshift({id:pid,lid,amt,date,type:document.getElementById('p-type').value,note:document.getElementById('p-note').value.trim()});
+  saveAll();flushPendingDocs('payment',pid);document.getElementById('p-amt').value='';document.getElementById('p-note').value='';renderPay();
+  toast(t('msg.paymentRec')+': '+fmt(amt));
+}
+
+/* =====================================================================
+   DOCUMENTS / PHOTOS  (optional — attached to a loan, payment or borrower)
+   Stored compressed (≈100-200KB JPEG) in a SEPARATE Firestore subcollection
+   users/{uid}/docs — kept out of the reconcile sync so images aren't
+   re-uploaded on every change. NOT mirrored to localStorage (too big).
+   ===================================================================== */
+let docs = [];           // {id, refType:'loan'|'payment'|'borrower', refId, name, image(dataURL), createdAt}
+let pendingDocs = [];    // held while creating a loan/payment; saved on submit
+let docTarget = null;    // {mode:'pending',refType} OR {mode:'borrower',id}
+
+/* Open camera (mobile) / file picker and remember where the photo should attach. */
+function pickDoc(target){
+  docTarget = target;
+  const i = document.getElementById('doc-input');
+  if(i){ i.value=''; i.click(); }
+}
+
+/* Resize + JPEG-compress an image File → small dataURL. */
+function compressImage(file, maxDim, quality){
+  maxDim = maxDim || 1200; quality = quality || 0.6;
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const img = new Image();
+      img.onload = () => {
+        let w=img.width, h=img.height;
+        if(w>=h && w>maxDim){ h=Math.round(h*maxDim/w); w=maxDim; }
+        else if(h>w && h>maxDim){ w=Math.round(w*maxDim/h); h=maxDim; }
+        const c=document.createElement('canvas'); c.width=w; c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);
+        resolve(c.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject; img.src = ev.target.result;
+    };
+    reader.onerror = reject; reader.readAsDataURL(file);
+  });
+}
+
+/* Handle the file input change (one or many photos). */
+async function onDocPicked(e){
+  const files = Array.prototype.slice.call(e.target.files || []);
+  if(!files.length) return;
+  let added=0;
+  for(const f of files){
+    if(!f.type || f.type.indexOf('image')!==0) continue;
+    try{
+      const image = await compressImage(f);
+      const d = { id:uid(), name:(f.name||'photo'), image, createdAt:new Date().toISOString() };
+      if(docTarget && docTarget.mode==='pending'){ d.refType=docTarget.refType; pendingDocs.push(d); }
+      else if(docTarget){ d.refType=docTarget.mode; d.refId=docTarget.id; docs.push(d); saveDocImage(d).catch(()=>{}); }
+      added++;
+    }catch(err){ /* skip bad image */ }
+  }
+  e.target.value='';
+  if(added){
+    if(docTarget && docTarget.mode==='pending') renderPendingThumbs();
+    else rerenderCurrent();
+    toast(added+' photo add hui ✓');
+  } else { toast('Photo add nahi hui.','err'); }
+}
+
+/* Save the photos that were attached while creating a loan/payment. */
+function flushPendingDocs(refType, refId){
+  pendingDocs.forEach(d=>{ d.refType=refType; d.refId=refId; docs.push(d); saveDocImage(d).catch(()=>{}); });
+  pendingDocs = [];
+}
+function clearPendingDocs(){ pendingDocs = []; }
+
+/* All photos belonging to a borrower (its ID + its loans' + its payments'). */
+function bAllDocs(b){
+  const lids = bLoans(b.id).map(l=>l.id);
+  const pids = payments.filter(p=>lids.indexOf(p.lid)>=0).map(p=>p.id);
+  return docs.filter(d =>
+    (d.refType==='borrower' && d.refId===b.id) ||
+    (d.refType==='loan' && lids.indexOf(d.refId)>=0) ||
+    (d.refType==='payment' && pids.indexOf(d.refId)>=0)
+  );
+}
+
+function delDoc(id){
+  if(!confirm(t('doc.confirmDelete'))) return;
+  docs = docs.filter(d=>d.id!==id);
+  deleteDocImage(id).catch(()=>{});
+  closeOverlay(); rerenderCurrent();
+  toast('Photo hata di.','err');
 }
 
 /* =====================================================================
@@ -164,6 +261,7 @@ async function initApp(user){
       borrowers=cloud.borrowers; loans=cloud.loans; payments=cloud.payments;
     }
 
+    try{ await cloudLoadDocs(user.uid); }catch(e){ docs=[]; }
     saveLS(); updateFooter(); renderAll();
     const ts = meta && meta.lastSync && meta.lastSync.toDate ? meta.lastSync.toDate() : new Date();
     updateSyncBadge('synced', ts);
@@ -183,6 +281,6 @@ function resetAppState(){
   detachCloudListeners();
   if(typeof cloudSyncTimer!=='undefined') clearTimeout(cloudSyncTimer);
   cloudSyncEnabled=false;
-  borrowers=[]; loans=[]; payments=[];
+  borrowers=[]; loans=[]; payments=[]; docs=[]; pendingDocs=[]; docTarget=null;
   fileHandle=null; unsavedChanges=false; currentUser=null;
 }
