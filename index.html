@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AAPKA HISAB — Loan Manager</title>
+<title>मेरा हिसाब — Loan Manager</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -15,7 +15,7 @@
   <div class="auth-card">
     <div class="auth-brand">
       <div class="logo">💰</div>
-      <h1>AAPKA HISAB</h1>
+      <h1>मेरा हिसाब</h1>
       <p>Loan Manager · Cloud Edition</p>
     </div>
 
@@ -60,16 +60,16 @@
 
 <aside class="sidebar" id="sidebar">
   <div class="slogo">
-    <h1>💰 AAPKA HISAB</h1>
+    <h1>💰 मेरा हिसाब</h1>
     <p>Loan Manager v4.0 · Cloud</p>
   </div>
   <nav class="snav">
-    <button class="ni active" onclick="goTab('dash')" id="nav-dash"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</button>
-    <button class="ni" onclick="goTab('borrowers')" id="nav-borrowers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Borrowers</button>
-    <button class="ni" onclick="goTab('add-borrower')" id="nav-add-borrower"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0z"/><path d="M12 15v6"/><path d="M9 18h6"/></svg>Add Borrower</button>
-    <button class="ni" onclick="goTab('payments')" id="nav-payments"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Payments</button>
-    <button class="ni" onclick="goTab('reminders')" id="nav-reminders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Reminders</button>
-    <button class="ni" onclick="goTab('reports')" id="nav-reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Reports</button>
+    <button class="ni active" onclick="goTab('dash')" id="nav-dash"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span data-i18n="nav.dash">Dashboard</span></button>
+    <button class="ni" onclick="goTab('borrowers')" id="nav-borrowers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span data-i18n="nav.borrowers">Borrowers</span></button>
+    <button class="ni" onclick="goTab('add-borrower')" id="nav-add-borrower"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0z"/><path d="M12 15v6"/><path d="M9 18h6"/></svg><span data-i18n="nav.addBorrower">Add Borrower</span></button>
+    <button class="ni" onclick="goTab('payments')" id="nav-payments"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg><span data-i18n="nav.payments">Payments</span></button>
+    <button class="ni" onclick="goTab('reminders')" id="nav-reminders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span data-i18n="nav.reminders">Reminders</span></button>
+    <button class="ni" onclick="goTab('reports')" id="nav-reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span data-i18n="nav.reports">Reports</span></button>
   </nav>
   <div class="sfooter" id="footer-info">
     <div id="footer-counts">0 borrowers · 0 loans</div>
@@ -87,6 +87,7 @@
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
       <span class="topbar-date" id="topbar-date"></span>
+      <button class="btn btn-g btn-sm lang-btn" onclick="toggleLang()" title="भाषा / Language">EN</button>
 
       <!-- cloud sync status -->
       <span class="sync-badge" id="sync-badge" title="Cloud sync status">
@@ -109,7 +110,7 @@
             <div class="pm-email" id="pm-email">—</div>
             <div class="pm-sync" id="pm-sync">Last sync: —</div>
           </div>
-          <button class="btn btn-d btn-sm" style="width:100%;justify-content:center" onclick="logout()">Log out</button>
+          <button class="btn btn-d btn-sm" style="width:100%;justify-content:center" onclick="logout()" data-i18n="app.logout">Log out</button>
         </div>
       </div>
     </div>
@@ -131,25 +132,25 @@
       <div id="dash-inner" style="display:none">
         <div class="metrics" id="dash-metrics"></div>
         <div class="card">
-          <div class="card-title">Portfolio Overview</div>
+          <div class="card-title" data-i18n="dash.portfolioOverview">Portfolio Overview</div>
           <div id="port-chart"></div>
           <div style="display:flex;gap:16px;margin-top:10px;font-size:11px;color:var(--text3)">
             <span><span style="display:inline-block;width:10px;height:10px;background:var(--accent);border-radius:2px;margin-right:4px"></span>Principal</span>
             <span><span style="display:inline-block;width:10px;height:10px;background:var(--red);border-radius:2px;margin-right:4px"></span>Interest due</span>
           </div>
         </div>
-        <div class="card"><div class="card-title">Active &amp; Overdue</div><div id="dash-list"></div></div>
+        <div class="card"><div class="card-title" data-i18n="dash.activeOverdue">Active &amp; Overdue</div><div id="dash-list"></div></div>
       </div>
     </div>
 
     <!-- BORROWERS -->
     <div class="sec" id="sec-borrowers">
       <div class="srow">
-        <div class="siw"><span class="sic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><input type="text" id="bs-q" placeholder="Search name, phone…" oninput="renderBorrowers()"></div>
+        <div class="siw"><span class="sic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><input type="text" id="bs-q" data-i18n-ph="bor.searchPh" placeholder="Search name, phone…" oninput="renderBorrowers()"></div>
         <select id="bs-f" onchange="renderBorrowers()" style="width:auto;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rs);color:var(--text);padding:9px 12px;font-size:13px;font-family:var(--font);outline:none">
-          <option value="all">All</option><option value="active">Active</option><option value="overdue">Overdue</option>
+          <option value="all" data-i18n="bor.all">All</option><option value="active" data-i18n="bor.active">Active</option><option value="overdue" data-i18n="bor.overdue">Overdue</option>
         </select>
-        <button class="btn btn-p btn-sm" onclick="goTab('add-borrower')">+ New</button>
+        <button class="btn btn-p btn-sm" onclick="goTab('add-borrower')" data-i18n="bor.new">+ New</button>
       </div>
       <div id="borrowers-list"></div>
       <div id="borrower-detail"></div>
@@ -158,17 +159,17 @@
     <!-- ADD BORROWER -->
     <div class="sec" id="sec-add-borrower">
       <div class="card">
-        <div class="card-title">New Borrower / नया उधारकर्ता</div>
+        <div class="card-title" data-i18n="ab.title">New Borrower</div>
         <div class="fgrid">
-          <div class="fg"><label>Full Name * / पूरा नाम</label><input type="text" id="nb-name" placeholder="Ramesh Sharma"></div>
-          <div class="fg"><label>Phone / मोबाइल</label><input type="text" id="nb-phone" placeholder="98765 43210"></div>
-          <div class="fg"><label>Address / पता</label><input type="text" id="nb-addr" placeholder="Village, city"></div>
-          <div class="fg"><label>ID / Aadhaar (optional)</label><input type="text" id="nb-id" placeholder="Last 4 digits"></div>
+          <div class="fg"><label data-i18n="ab.fullName">Full Name *</label><input type="text" id="nb-name" placeholder="Ramesh Sharma"></div>
+          <div class="fg"><label data-i18n="ab.phone">Mobile</label><input type="text" id="nb-phone" placeholder="98765 43210"></div>
+          <div class="fg"><label data-i18n="ab.address">Address</label><input type="text" id="nb-addr" placeholder="Village, city"></div>
+          <div class="fg"><label data-i18n="ab.id">ID / Aadhaar (optional)</label><input type="text" id="nb-id" placeholder="Last 4 digits"></div>
         </div>
-        <div class="fg"><label>Notes</label><textarea id="nb-notes" placeholder="Any notes about this borrower"></textarea></div>
+        <div class="fg"><label data-i18n="ab.notes">Notes</label><textarea id="nb-notes" data-i18n-ph="ab.phNote" placeholder="Any notes about this borrower"></textarea></div>
         <div class="brow">
-          <button class="btn btn-g" onclick="clearNB()">Clear</button>
-          <button class="btn btn-p" onclick="addBorrower()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Save Borrower</button>
+          <button class="btn btn-g" onclick="clearNB()" data-i18n="ab.clear">Clear</button>
+          <button class="btn btn-p" onclick="addBorrower()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span data-i18n="ab.save">Save Borrower</span></button>
         </div>
       </div>
     </div>
@@ -176,31 +177,35 @@
     <!-- PAYMENTS -->
     <div class="sec" id="sec-payments">
       <div class="card">
-        <div class="card-title">Record Payment / भुगतान दर्ज करें</div>
+        <div class="card-title" data-i18n="pay.record">Record Payment</div>
         <div class="fgrid">
-          <div class="fg"><label>Borrower *</label><select id="p-who" onchange="updateLoanSelect()"><option value="">— Select —</option></select></div>
-          <div class="fg"><label>Loan *</label><select id="p-loan"><option value="">— Select borrower first —</option></select></div>
-          <div class="fg"><label>Date</label><input type="date" id="p-date"></div>
-          <div class="fg"><label>Amount ₹ *</label><input type="number" id="p-amt" placeholder="2000" min="1"></div>
-          <div class="fg"><label>Type</label>
+          <div class="fg"><label data-i18n="pay.borrower">Borrower *</label><select id="p-who" onchange="updateLoanSelect()"><option value="">— Select —</option></select></div>
+          <div class="fg"><label data-i18n="pay.loan">Loan *</label><select id="p-loan"><option value="">— Select borrower first —</option></select></div>
+          <div class="fg"><label data-i18n="pay.date">Date</label><input type="date" id="p-date"></div>
+          <div class="fg"><label data-i18n="pay.amount">Amount ₹ *</label><input type="number" id="p-amt" placeholder="2000" min="1"></div>
+          <div class="fg"><label data-i18n="pay.type">Type</label>
             <select id="p-type">
-              <option>Monthly interest</option><option>Principal repayment</option>
-              <option>OTS settlement</option><option>Partial payment</option><option>Penalty</option>
+              <option data-i18n="pay.tMonthly">Monthly interest</option><option data-i18n="pay.tPrincipal">Principal repayment</option>
+              <option data-i18n="pay.tOts">OTS settlement</option><option data-i18n="pay.tPartial">Partial payment</option><option data-i18n="pay.tPenalty">Penalty</option>
             </select>
           </div>
-          <div class="fg"><label>Note</label><input type="text" id="p-note" placeholder="Cash / UPI / Cheque no."></div>
+          <div class="fg"><label data-i18n="pay.note">Note</label><input type="text" id="p-note" placeholder="Cash / UPI / Cheque no."></div>
         </div>
-        <div class="brow"><button class="btn btn-p" onclick="recPay()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Record Payment</button></div>
+        <div style="margin-bottom:6px">
+          <button type="button" class="btn btn-g btn-sm" onclick="pickDoc({mode:'pending',refType:'payment'})">📷 <span data-i18n="doc.add">Add Photo</span></button>
+          <div class="pending-docs docgrid" style="margin-top:8px"></div>
+        </div>
+        <div class="brow"><button class="btn btn-p" onclick="recPay()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pay.recordBtn">Record Payment</span></button></div>
       </div>
-      <div class="card"><div class="card-title">Recent Payments</div><div id="pay-list"></div></div>
+      <div class="card"><div class="card-title" data-i18n="pay.recent">Recent Payments</div><div id="pay-list"></div></div>
     </div>
 
     <!-- REMINDERS -->
     <div class="sec" id="sec-reminders">
       <div class="tabrow">
-        <button class="tb active" onclick="setRt('due')" id="rt-due">Due This Month</button>
-        <button class="tb" onclick="setRt('over')" id="rt-over">Overdue</button>
-        <button class="tb" onclick="setRt('all')" id="rt-all">All Active</button>
+        <button class="tb active" onclick="setRt('due')" id="rt-due" data-i18n="rem.dueThisMonth">Due This Month</button>
+        <button class="tb" onclick="setRt('over')" id="rt-over" data-i18n="rem.overdue">Overdue</button>
+        <button class="tb" onclick="setRt('all')" id="rt-all" data-i18n="rem.allActive">All Active</button>
       </div>
       <div id="rem-list"></div>
     </div>
@@ -208,29 +213,32 @@
     <!-- REPORTS -->
     <div class="sec" id="sec-reports">
       <div class="card">
-        <div class="card-title">Storage &amp; Backup</div>
+        <div class="card-title" data-i18n="rep.storageBackup">Storage &amp; Backup</div>
         <div class="info-box">
           <strong>☁️ Cloud:</strong> Aapka data aapke account mein Firestore par save hota hai — har device par sync.<br>
           <strong>💾 localStorage:</strong> Browser mein bhi offline backup rehta hai.<br>
           <strong>📂 File (optional):</strong> Chahein to ek JSON file bhi link kar sakte hain extra backup ke liye.
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:10px">
-          <button class="btn btn-p" onclick="forceCloudSync()">☁️ Sync to Cloud Now</button>
-          <button class="btn btn-g" onclick="openFile()">📂 Open / Link Data File</button>
-          <button class="btn btn-g" onclick="manualSave()">💾 Save to File Now</button>
-          <button class="btn btn-g" onclick="exportLoansCSV()">📥 Export Loans (Excel)</button>
-          <button class="btn btn-g" onclick="exportPaysCSV()">📥 Export Payments (Excel)</button>
-          <button class="btn btn-g" onclick="exportJSON()">📤 Download JSON Backup</button>
-          <button class="btn btn-g" onclick="document.getElementById('ri').click()">📤 Import JSON Backup</button>
+          <button class="btn btn-p" onclick="forceCloudSync()" data-i18n="rep.syncNow">☁️ Sync to Cloud Now</button>
+          <button class="btn btn-g" onclick="openFile()" data-i18n="rep.openFile">📂 Open / Link Data File</button>
+          <button class="btn btn-g" onclick="manualSave()" data-i18n="rep.saveFile">💾 Save to File Now</button>
+          <button class="btn btn-g" onclick="exportLoansCSV()" data-i18n="rep.exportLoans">📥 Export Loans (Excel)</button>
+          <button class="btn btn-g" onclick="exportPaysCSV()" data-i18n="rep.exportPays">📥 Export Payments (Excel)</button>
+          <button class="btn btn-g" onclick="exportJSON()" data-i18n="rep.downloadJSON">📤 Download JSON Backup</button>
+          <button class="btn btn-g" onclick="document.getElementById('ri').click()" data-i18n="rep.importJSON">📤 Import JSON Backup</button>
           <input type="file" id="ri" accept=".json" style="display:none" onchange="importJSON(event)">
         </div>
       </div>
-      <div class="card"><div class="card-title">Summary Report</div><div id="report-body"></div></div>
+      <div class="card"><div class="card-title" data-i18n="rep.summary">Summary Report</div><div id="report-body"></div></div>
     </div>
 
   </div>
 </div>
 </div>
+
+<!-- hidden input used by camera/file capture for document photos -->
+<input type="file" id="doc-input" accept="image/*" capture="environment" multiple style="display:none" onchange="onDocPicked(event)">
 
 <div class="toast" id="toast"></div>
 <div class="overlay" id="overlay" onclick="closeOverlay(event)"><div class="modal" id="modal-body"></div></div>
@@ -248,6 +256,7 @@
 <!--             backup(localStorage/file) → firestore(cloud) → auth -->
 <!-- ============================================================== -->
 <script src="js/config.js"></script>
+<script src="js/i18n.js"></script>
 <script src="js/app.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/backup.js"></script>
