@@ -130,28 +130,28 @@ function updateSaveStatus(state){
 /* ── CSV EXPORT (unchanged) ────────────────────────────────────────── */
 function dlCSV(rows,fn){const csv=rows.map(r=>r.map(v=>'"'+(String(v||'').replace(/"/g,'""'))+'"').join(',')).join('\n');const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,﻿'+encodeURIComponent(csv);a.download=fn;a.click();}
 function exportLoansCSV(){
-  if(loans.length===0){toast('No loans.','err');return;}
+  if(loans.length===0){toast(t('msg.noLoans'),'err');return;}
   const rows=[['Borrower','Phone','Principal','Rate%','Start','Duration','Type','Status','Interest Accrued','Total Due','Paid','Outstanding','Collateral','Notes']];
   loans.forEach(l=>{const b=borrowers.find(x=>x.id===l.bid);rows.push([b?b.name:'?',b?b.phone||'':'',l.prin,l.rate,l.start,l.dur,l.type,lStatus(l),Math.round(lIntAccrued(l)),Math.round(lTotalDue(l)),Math.round(lPaid(l.id)),Math.round(lOutstanding(l)),l.coll||'',l.notes||'']);});
-  dlCSV(rows,'loans_'+TODAY.toISOString().slice(0,10)+'.csv');toast('Exported!');
+  dlCSV(rows,'loans_'+TODAY.toISOString().slice(0,10)+'.csv');toast(t('msg.exported'));
 }
 function exportPaysCSV(){
-  if(payments.length===0){toast('No payments.','err');return;}
+  if(payments.length===0){toast(t('msg.noPayments'),'err');return;}
   const rows=[['Borrower','Phone','Loan Amount','Date','Type','Amount','Note']];
   [...payments].sort((a,b)=>new Date(b.date)-new Date(a.date)).forEach(p=>{const l=loans.find(x=>x.id===p.lid);const b=l?borrowers.find(x=>x.id===l.bid):null;rows.push([b?b.name:'?',b?b.phone||'':'',l?l.prin:'?',p.date,p.type,p.amt,p.note||'']);});
-  dlCSV(rows,'payments_'+TODAY.toISOString().slice(0,10)+'.csv');toast('Exported!');
+  dlCSV(rows,'payments_'+TODAY.toISOString().slice(0,10)+'.csv');toast(t('msg.exported'));
 }
 
 /* ── JSON EXPORT / IMPORT (unchanged, backward compatible) ─────────── */
 function exportJSON(){
-  const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(dataToJSON());a.download='mera_hisaab_'+TODAY.toISOString().slice(0,10)+'.json';a.click();toast('Backup downloaded!');
+  const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(dataToJSON());a.download='mera_hisaab_'+TODAY.toISOString().slice(0,10)+'.json';a.click();toast(t('msg.backupDl'));
 }
 function importJSON(e){
   const file=e.target.files[0];if(!file)return;
   const r=new FileReader();r.onload=ev=>{
-    try{const d=JSON.parse(ev.target.result);if(!d.borrowers||!d.loans||!d.payments){toast('Invalid file.','err');return;}
-    if(!confirm(`Restore ${d.borrowers.length} borrowers, ${d.loans.length} loans, ${d.payments.length} payments? This replaces current data and syncs to cloud.`))return;
-    borrowers=d.borrowers;loans=d.loans;payments=d.payments;saveAll();toast('Restored!');renderAll();}catch{toast('Failed.','err');}
+    try{const d=JSON.parse(ev.target.result);if(!d.borrowers||!d.loans||!d.payments){toast(t('msg.invalidFile'),'err');return;}
+    if(!confirm(t('msg.restoreConfirm')))return;
+    borrowers=d.borrowers;loans=d.loans;payments=d.payments;saveAll();toast(t('msg.restored'));renderAll();}catch{toast(t('msg.failed'),'err');}
   };r.readAsText(file);e.target.value='';
 }
 
