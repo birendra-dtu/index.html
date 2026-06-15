@@ -20,7 +20,7 @@ function renderWelcome(){
   document.getElementById('welcome-box').innerHTML=`
     <div class="welcome">
       <div style="font-size:48px;margin-bottom:16px">💰</div>
-      <h2>SUSHIL HARDWARE — Loan Manager</h2>
+      <h2>मेरा हिसाब — Loan Manager</h2>
       <p>${hasData?t('wel.welcomeBack'):t('wel.start')}</p>
       <div class="steps">
         <div class="step"><div class="step-num" style="background:var(--accent)">1</div><div><strong>${t('wel.step1')}</strong><br><span style="font-size:12px;color:var(--text3)">${t('wel.step1d')}</span></div></div>
@@ -56,6 +56,13 @@ function goTab(tab){
   if(window.innerWidth<=768)document.getElementById('sidebar').classList.remove('open');
 }
 
+/* Dashboard metric click → open the relevant filtered borrowers view. */
+function goBorrowersFiltered(f){
+  goTab('borrowers');
+  const sel=document.getElementById('bs-f'); if(sel) sel.value=f;
+  renderBorrowers();
+}
+
 function renderAll(){
   document.getElementById('welcome-box').innerHTML='';
   document.getElementById('dash-inner').style.display='';
@@ -88,13 +95,13 @@ function renderDash(){
   const totI=actL.reduce((s,l)=>s+lMI(l),0);
   const totC=payments.reduce((s,p)=>s+p.amt,0);
   document.getElementById('dash-metrics').innerHTML=`
-    <div class="met"><div class="met-l">${t('dash.borrowers')}</div><div class="met-v" style="color:var(--accent)">${borrowers.length}</div></div>
-    <div class="met"><div class="met-l">${t('dash.activeLoans')}</div><div class="met-v" style="color:var(--green)">${actL.length}</div></div>
-    <div class="met"><div class="met-l">${t('dash.overdue')}</div><div class="met-v" style="color:var(--red)">${ovL.length}</div></div>
-    <div class="met"><div class="met-l">${t('dash.portfolio')}</div><div class="met-v">${fmt(totP)}</div></div>
-    <div class="met"><div class="met-l">${t('dash.outstanding')}</div><div class="met-v" style="color:var(--amber)">${fmt(totO)}</div></div>
-    <div class="met"><div class="met-l">${t('dash.interestMonth')}</div><div class="met-v" style="color:var(--red)">${fmt(totI)}</div></div>
-    <div class="met"><div class="met-l">${t('dash.totalCollected')}</div><div class="met-v" style="color:var(--green)">${fmt(totC)}</div></div>
+    <div class="met clk" onclick="goBorrowersFiltered('all')"><div class="met-l">${t('dash.borrowers')}</div><div class="met-v" style="color:var(--accent)">${borrowers.length}</div></div>
+    <div class="met clk" onclick="goBorrowersFiltered('active')"><div class="met-l">${t('dash.activeLoans')}</div><div class="met-v" style="color:var(--green)">${actL.length}</div></div>
+    <div class="met clk" onclick="goBorrowersFiltered('overdue')"><div class="met-l">${t('dash.overdue')}</div><div class="met-v" style="color:var(--red)">${ovL.length}</div></div>
+    <div class="met clk" onclick="goTab('reports')"><div class="met-l">${t('dash.portfolio')}</div><div class="met-v">${fmt(totP)}</div></div>
+    <div class="met clk" onclick="goBorrowersFiltered('all')"><div class="met-l">${t('dash.outstanding')}</div><div class="met-v" style="color:var(--amber)">${fmt(totO)}</div></div>
+    <div class="met clk" onclick="goTab('reminders')"><div class="met-l">${t('dash.interestMonth')}</div><div class="met-v" style="color:var(--red)">${fmt(totI)}</div></div>
+    <div class="met clk" onclick="goTab('payments')"><div class="met-l">${t('dash.totalCollected')}</div><div class="met-v" style="color:var(--green)">${fmt(totC)}</div></div>
   `;
   const top8=openL.slice(0,8);
   if(top8.length===0){document.getElementById('port-chart').innerHTML='<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>'+t('dash.noLoans')+'</div>';
@@ -199,6 +206,7 @@ function viewBorrower(id){
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button class="btn btn-p btn-sm" onclick="showAddLoan('${id}')">${t('bd.newLoan')}</button>
           <button class="btn btn-success btn-sm" onclick="sendWhatsApp('${id}')">📲 WhatsApp</button>
+          <button class="btn btn-g btn-sm" onclick="callBorrower('${id}')">📞 ${t('bd.call')}</button>
           <button class="btn btn-g btn-sm" onclick="copyRem('${id}')">📋 ${t('bd.copy')}</button>
           <button class="btn btn-g btn-sm" onclick="showEditBorrower('${id}')">${t('bd.edit')}</button>
           <button class="btn btn-d btn-sm" onclick="delBorrower('${id}')">${t('bd.delete')}</button>
@@ -217,8 +225,8 @@ function viewBorrower(id){
       <div style="font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">${t('bd.paymentHistory')} (${bPays.length})</div>
       ${bPays.length===0?'<div style="font-size:12px;color:var(--text3)">'+t('bd.noPayments')+'</div>':`
       <div class="tw"><table>
-        <thead><tr><th>${t('th.date')}</th><th>${t('th.loan')}</th><th>${t('th.type')}</th><th class="r">${t('th.amount')}</th><th>${t('th.note')}</th></tr></thead>
-        <tbody>${bPays.map(p=>{const l=loans.find(x=>x.id===p.lid);return`<tr><td class="p">${p.date}</td><td style="color:var(--text3)">${l?fmt(l.prin):'?'}</td><td style="color:var(--text3)">${p.type}</td><td class="r" style="color:var(--green)">${fmt(p.amt)}</td><td style="color:var(--text3)">${p.note||'—'}</td></tr>`;}).join('')}</tbody>
+        <thead><tr><th>${t('th.date')}</th><th>${t('th.loan')}</th><th>${t('th.type')}</th><th class="r">${t('th.amount')}</th><th>${t('th.note')}</th><th></th></tr></thead>
+        <tbody>${bPays.map(p=>{const l=loans.find(x=>x.id===p.lid);return`<tr><td class="p">${pDateTime(p)}</td><td style="color:var(--text3)">${l?fmt(l.prin):'?'}</td><td style="color:var(--text3)">${p.type}</td><td class="r" style="color:var(--green)">${fmt(p.amt)}</td><td style="color:var(--text3)">${p.note||'—'}</td><td><button class="btn btn-g btn-sm" onclick="sendReceipt('${p.id}')" title="${t('rcpt.btn')}">🧾</button></td></tr>`;}).join('')}</tbody>
       </table></div>`}
     </div>`;
   document.getElementById('borrower-detail').scrollIntoView({behavior:'smooth',block:'start'});
@@ -300,7 +308,7 @@ function renderPay(){
   const rec=[...payments].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,25);
   if(rec.length===0){document.getElementById('pay-list').innerHTML='<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>'+t('pay.noPayments')+'</div>';return;}
   document.getElementById('pay-list').innerHTML=`<div class="tw"><table><thead><tr><th>${t('th.borrower')}</th><th>${t('th.loan')}</th><th>${t('th.date')}</th><th>${t('th.type')}</th><th class="r">${t('th.amount')}</th><th>${t('th.note')}</th></tr></thead>
-    <tbody>${rec.map(p=>{const l=loans.find(x=>x.id===p.lid);const b=l?borrowers.find(x=>x.id===l.bid):null;return`<tr><td class="p">${b?b.name:'?'}</td><td style="color:var(--text3);font-family:var(--mono);font-size:12px">${l?fmt(l.prin):'?'}</td><td>${p.date}</td><td style="color:var(--text3)">${p.type}</td><td class="r" style="color:var(--green)">${fmt(p.amt)}</td><td style="color:var(--text3)">${p.note||'—'}</td></tr>`;}).join('')}</tbody></table></div>`;
+    <tbody>${rec.map(p=>{const l=loans.find(x=>x.id===p.lid);const b=l?borrowers.find(x=>x.id===l.bid):null;return`<tr><td class="p">${b?b.name:'?'}</td><td style="color:var(--text3);font-family:var(--mono);font-size:12px">${l?fmt(l.prin):'?'}</td><td>${pDateTime(p)}</td><td style="color:var(--text3)">${p.type}</td><td class="r" style="color:var(--green)">${fmt(p.amt)}</td><td style="color:var(--text3)">${p.note||'—'}</td></tr>`;}).join('')}</tbody></table></div>`;
 }
 function updateLoanSelect(){
   const bid=document.getElementById('p-who').value;const lSel=document.getElementById('p-loan');
@@ -324,7 +332,7 @@ function renderRem(filter){
   if(items.length===0){document.getElementById('rem-list').innerHTML='<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>'+t('rem.nothing')+'</div>';return;}
   document.getElementById('rem-list').innerHTML=items.map(({b,al,ov,tot,totMI,daysLeft})=>{
     const cls=ov?'urg':daysLeft<=5?'wrn':'ok';const label=ov?'🔴 '+t('rem.overdue'):(daysLeft<=5?'🟡 ':'🟢 ')+daysLeft+' '+t('rem.days');
-    return`<div class="ri ${cls}"><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px">${b.name} ${b.phone?`<span style="color:var(--text3);font-weight:400">· ${b.phone}</span>`:''}</div><div style="font-size:12px;color:var(--text3)">${label} · ${al.length} ${t('bd.loans')} · ${t('rem.monthly')}: ${fmt(totMI)} · ${t('rem.outstanding')}: <span style="color:var(--amber)">${fmt(tot)}</span></div></div><div style="display:flex;gap:6px"><button class="btn btn-success btn-sm" onclick="sendWhatsApp('${b.id}')">📲</button><button class="btn btn-g btn-sm" onclick="copyRem('${b.id}')">📋</button><button class="btn btn-p btn-sm" onclick="goToBorrower('${b.id}')">${t('rem.view')}</button></div></div>`;
+    return`<div class="ri ${cls}"><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px">${b.name} ${b.phone?`<span style="color:var(--text3);font-weight:400">· ${b.phone}</span>`:''}</div><div style="font-size:12px;color:var(--text3)">${label} · ${al.length} ${t('bd.loans')} · ${t('rem.monthly')}: ${fmt(totMI)} · ${t('rem.outstanding')}: <span style="color:var(--amber)">${fmt(tot)}</span></div></div><div style="display:flex;gap:6px"><button class="btn btn-success btn-sm" onclick="sendWhatsApp('${b.id}')">📲</button><button class="btn btn-g btn-sm" onclick="copyRem('${b.id}')">📋</button><button class="btn btn-g btn-sm" onclick="callBorrower('${b.id}')">📞</button><button class="btn btn-p btn-sm" onclick="goToBorrower('${b.id}')">${t('rem.view')}</button></div></div>`;
   }).join('');
 }
 function waMessage(b){
@@ -368,6 +376,33 @@ function renderReports(){
 
 /* ── OVERLAY ───────────────────────────────────────────────────────── */
 function closeOverlay(e){if(!e||e.target===document.getElementById('overlay'))document.getElementById('overlay').classList.remove('show');}
+
+/* ── QUICK LOAN CALCULATOR (no loan created — just a what-if) ──────── */
+function showCalc(){
+  document.getElementById('modal-body').innerHTML=`<h2>🧮 ${t('calc.title')}</h2>
+    <div class="fgrid">
+      <div class="fg"><label>${t('calc.amount')}</label><input type="number" id="calc-amt" value="50000" oninput="calcCompute()"></div>
+      <div class="fg"><label>${t('calc.rate')}</label><input type="number" id="calc-rate" value="2" step="0.01" oninput="calcCompute()"></div>
+      <div class="fg"><label>${t('calc.months')}</label><input type="number" id="calc-mo" value="12" oninput="calcCompute()"></div>
+    </div>
+    <div id="calc-res" style="margin-top:8px"></div>
+    <div class="brow"><button class="btn btn-g" onclick="closeOverlay()">${t('ots.close')}</button></div>`;
+  document.getElementById('overlay').classList.add('show');
+  calcCompute();
+}
+function calcCompute(){
+  const amt=parseFloat(document.getElementById('calc-amt').value)||0;
+  const rate=parseFloat(document.getElementById('calc-rate').value)||0;
+  const mo=parseInt(document.getElementById('calc-mo').value)||0;
+  const mi=amt*rate/100, ti=mi*mo, td=amt+ti;
+  const cell=(lbl,val,col)=>`<div style="background:var(--bg3);border-radius:var(--rs);padding:12px"><div style="font-size:11px;color:var(--text3);text-transform:uppercase">${lbl}</div><div style="font-size:18px;font-weight:700;font-family:var(--mono)${col?';color:'+col:''}">${val}</div></div>`;
+  document.getElementById('calc-res').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    ${cell(t('calc.monthlyInt'),fmt(mi),'var(--red)')}
+    ${cell(t('calc.perDay'),fmtd(mi/30))}
+    ${cell(t('calc.totalInt'),fmt(ti),'var(--amber)')}
+    ${cell(t('calc.totalDue'),fmt(td),'var(--green)')}
+  </div>`;
+}
 
 /* ── DOCUMENTS / PHOTOS (UI) ───────────────────────────────────────── */
 function renderPendingThumbs(){
