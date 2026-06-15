@@ -1,4 +1,4 @@
-# मेरा हिसाब — Loan Manager (Cloud Edition)
+# SUSHIL HARDWARE — Loan Manager (Cloud Edition)
 
 Multi-user cloud version of the Loan Manager. Same UI and features as the
 original single-file app, now with **Firebase Authentication** (email/password
