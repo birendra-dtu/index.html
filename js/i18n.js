@@ -91,7 +91,9 @@ const I18N = {
     /* auth errors & messages */
     'err.invalid-email':'That email address looks invalid.','err.user-disabled':'This account has been disabled.','err.user-not-found':'No account found with that email.','err.wrong-password':'Incorrect password.','err.invalid-credential':'Incorrect email or password.','err.email-already-in-use':'An account already exists with this email. Try logging in.','err.weak-password':'Password is too weak (min 6 characters).','err.too-many-requests':'Too many attempts. Please wait and try again.','err.network':'Network error. Check your connection.','err.popup-blocked':'Popup blocked — allow popups for Google sign-in.','err.operation-not-allowed':'This sign-in method is not enabled in Firebase.','err.unauthorized-domain':'This domain is not authorised in Firebase Auth settings.','err.generic':'Something went wrong.',
     'authmsg.enterBoth':'Enter email and password.','authmsg.passShort':'Password must be at least 6 characters.','authmsg.enterEmailFirst':'Enter your email above first, then tap "Forgot password?".',
-    'msg.noLoans':'No loans.','msg.noPayments':'No payments.','msg.invalidFile':'Invalid file.','msg.failed':'Failed.'
+    'msg.noLoans':'No loans.','msg.noPayments':'No payments.','msg.invalidFile':'Invalid file.','msg.failed':'Failed.',
+    /* calculator + call + receipt */
+    'calc.title':'Loan Calculator','calc.amount':'Amount ₹','calc.rate':'Monthly Rate %','calc.months':'Months','calc.monthlyInt':'Monthly interest','calc.totalInt':'Total interest','calc.totalDue':'Total (with principal)','calc.perDay':'Per day','calc.open':'Calculator','bd.call':'Call','rcpt.btn':'Send receipt','msg.noPhone':'No mobile number.','msg.receiptSent':'Opening WhatsApp…','msg.confirmPay':'Record this payment?'
   },
   hi: {
     /* nav */
@@ -176,7 +178,9 @@ const I18N = {
     /* auth errors & messages */
     'err.invalid-email':'Email address galat lag raha hai.','err.user-disabled':'Ye account band kar diya gaya hai.','err.user-not-found':'Is email se koi account nahi mila.','err.wrong-password':'Password galat hai.','err.invalid-credential':'Email ya password galat hai.','err.email-already-in-use':'Is email se account pehle se hai. Login karein.','err.weak-password':'Password kamzor hai (kam se kam 6 akshar).','err.too-many-requests':'Bahut baar try kiya. Thodi der baad karein.','err.network':'Network error. Connection check karein.','err.popup-blocked':'Popup block ho gaya — Google login ke liye popup allow karein.','err.operation-not-allowed':'Ye sign-in method Firebase me enable nahi hai.','err.unauthorized-domain':'Ye domain Firebase Auth me allowed nahi hai.','err.generic':'Kuch galat ho gaya.',
     'authmsg.enterBoth':'Email aur password daalein.','authmsg.passShort':'Password kam se kam 6 akshar ka ho.','authmsg.enterEmailFirst':'Pehle upar apna email daalein, fir "Forgot password?" dabayein.',
-    'msg.noLoans':'Koi loan nahi.','msg.noPayments':'Koi jama nahi.','msg.invalidFile':'Galat file.','msg.failed':'Nahi hua.'
+    'msg.noLoans':'Koi loan nahi.','msg.noPayments':'Koi jama nahi.','msg.invalidFile':'Galat file.','msg.failed':'Nahi hua.',
+    /* calculator + call + receipt */
+    'calc.title':'Loan Calculator','calc.amount':'रकम ₹','calc.rate':'महीने का ब्याज %','calc.months':'कितने महीने','calc.monthlyInt':'महीने का ब्याज','calc.totalInt':'कुल ब्याज','calc.totalDue':'कुल (असल सहित)','calc.perDay':'रोज़ का','calc.open':'Calculator','bd.call':'Call','rcpt.btn':'रसीद भेजें','msg.noPhone':'Mobile number nahi hai.','msg.receiptSent':'WhatsApp khul raha hai…','msg.confirmPay':'क्या ये जमा दर्ज करें?'
   }
 };
 
