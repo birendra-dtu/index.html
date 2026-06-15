@@ -20,7 +20,7 @@ function renderWelcome(){
   document.getElementById('welcome-box').innerHTML=`
     <div class="welcome">
       <div style="font-size:48px;margin-bottom:16px">💰</div>
-      <h2>मेरा हिसाब — Loan Manager</h2>
+      <h2>SUSHIL HARDWARE — Loan Manager</h2>
       <p>${hasData?t('wel.welcomeBack'):t('wel.start')}</p>
       <div class="steps">
         <div class="step"><div class="step-num" style="background:var(--accent)">1</div><div><strong>${t('wel.step1')}</strong><br><span style="font-size:12px;color:var(--text3)">${t('wel.step1d')}</span></div></div>
