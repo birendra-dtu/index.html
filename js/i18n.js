@@ -71,7 +71,7 @@ const I18N = {
     /* status */
     'status.active':'active','status.overdue':'overdue','status.closed':'closed',
     /* welcome */
-    'wel.h2':'मेरा हिसाब — Loan Manager','wel.addFirst':'+ Add First Borrower',
+    'wel.h2':'SUSHIL HARDWARE — Loan Manager','wel.addFirst':'+ Add First Borrower',
     /* auth */
     'auth.login':'Login','auth.createAccount':'Create account','auth.email':'Email','auth.password':'Password',
     'auth.forgot':'Forgot password?','auth.loginBtn':'Log in','auth.createBtn':'Create account','auth.or':'or',
@@ -158,7 +158,7 @@ const I18N = {
     /* status */
     'status.active':'चालू','status.overdue':'बकाया','status.closed':'बंद',
     /* welcome */
-    'wel.h2':'मेरा हिसाब — Loan Manager','wel.addFirst':'+ पहला ग्राहक जोड़ें',
+    'wel.h2':'SUSHIL HARDWARE — Loan Manager','wel.addFirst':'+ पहला ग्राहक जोड़ें',
     /* auth */
     'auth.login':'Login','auth.createAccount':'नया खाता','auth.email':'Email','auth.password':'Password',
     'auth.forgot':'Password भूल गए?','auth.loginBtn':'Login करें','auth.createBtn':'खाता बनाएं','auth.or':'या',
