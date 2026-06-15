@@ -27,6 +27,7 @@ function fmtd(n,d=2){return '₹'+parseFloat(n.toFixed(d)).toLocaleString('en-IN
 function moBetween(a,b){return(b.getFullYear()-a.getFullYear())*12+(b.getMonth()-a.getMonth());}
 function daysBetween(a,b){return Math.round((b-a)/86400000);}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function pDateTime(p){if(!p||!p.ts)return p?p.date:'';return p.date+' · '+new Date(p.ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});}
 function lStatus(l){if(l.closed)return'closed';const s=new Date(l.start);s.setHours(0,0,0,0);if(moBetween(s,TODAY)>=l.dur)return'overdue';return'active';}
 function lMI(l){return l.prin*l.rate/100;}
 function lIntAccrued(l){const s=new Date(l.start);s.setHours(0,0,0,0);const mo=Math.min(Math.max(0,moBetween(s,TODAY)),l.dur);return l.prin*l.rate/100*mo;}
@@ -120,10 +121,34 @@ function recPay(){
   const amt=parseFloat(document.getElementById('p-amt').value);const date=document.getElementById('p-date').value;
   if(!bid){toast(t('msg.selBorrower'),'err');return;}if(!lid){toast(t('msg.selLoan'),'err');return;}
   if(!amt||amt<1){toast(t('msg.validAmt'),'err');return;}
+  const b=borrowers.find(x=>x.id===bid);
+  if(!confirm((b?b.name+' — ':'')+fmt(amt)+'  ('+date+')\n'+t('msg.confirmPay'))) return;
   const pid=uid();
-  payments.unshift({id:pid,lid,amt,date,type:document.getElementById('p-type').value,note:document.getElementById('p-note').value.trim()});
+  payments.unshift({id:pid,lid,amt,date,ts:new Date().toISOString(),type:document.getElementById('p-type').value,note:document.getElementById('p-note').value.trim()});
   saveAll();flushPendingDocs('payment',pid);document.getElementById('p-amt').value='';document.getElementById('p-note').value='';renderPay();
   toast(t('msg.paymentRec')+': '+fmt(amt));
+}
+
+/* ── CALL borrower (opens phone dialer on mobile) ──────────────────── */
+function callBorrower(bid){
+  const b=borrowers.find(x=>x.id===bid); if(!b)return;
+  const num=(b.phone||'').replace(/[^\d+]/g,'');
+  if(!num){toast(t('msg.noPhone'),'err');return;}
+  window.location.href='tel:'+num;
+}
+
+/* ── Send a payment RECEIPT to the borrower on WhatsApp ────────────── */
+function sendReceipt(pid){
+  const p=payments.find(x=>x.id===pid); if(!p)return;
+  const l=loans.find(x=>x.id===p.lid); const b=l?borrowers.find(x=>x.id===l.bid):null;
+  if(!b){toast('?','err');return;}
+  const num=waNumber(b.phone);
+  if(num.length<12){toast(t('msg.noPhone'),'err');return;}
+  const msg=`🧾 रसीद / Receipt\n\n${b.name} जी\nतारीख / Date: ${p.date}\nजमा / Paid: ${fmt(p.amt)} (${p.type})`
+    + (l?`\nLoan: ${fmt(l.prin)} @ ${l.rate}%\nबकाया / Outstanding: ${fmt(lOutstanding(l))}`:'')
+    + `\n\nधन्यवाद 🙏`;
+  toast(t('msg.receiptSent'),'info');
+  window.open('https://wa.me/'+num+'?text='+encodeURIComponent(msg),'_blank');
 }
 
 /* =====================================================================
