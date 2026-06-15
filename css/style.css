@@ -208,3 +208,7 @@ tbody tr:hover td{background:var(--bg3)}
 .docthumb img{width:100%;height:100%;object-fit:cover;display:block}
 .docthumb .doclbl{position:absolute;bottom:0;left:0;right:0;font-size:8px;line-height:1.3;background:rgba(0,0,0,.62);color:#fff;padding:1px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .docthumb .docx{position:absolute;top:2px;right:2px;width:17px;height:17px;border-radius:50%;border:none;background:rgba(0,0,0,.65);color:#fff;font-size:10px;cursor:pointer;line-height:17px;padding:0;text-align:center}
+
+/* clickable dashboard metric cards */
+.met.clk{cursor:pointer;transition:border-color .15s,background .15s}
+.met.clk:hover{border-color:var(--accent);background:var(--bg3)}
